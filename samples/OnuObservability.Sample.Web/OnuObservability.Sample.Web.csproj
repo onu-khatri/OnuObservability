@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup Condition="'$(UseLocalPackages)' != 'true'">
+    <ProjectReference Include="..\..\src\OnuObservability.AspNetCore\OnuObservability.AspNetCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(UseLocalPackages)' == 'true'">
+    <PackageReference Include="OnuObservability.AspNetCore" VersionOverride="[$(OnuObservabilityPackageVersion)]" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsSampleProject>true</IsSampleProject>
+  </PropertyGroup>
+
+</Project>

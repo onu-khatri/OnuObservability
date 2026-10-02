@@ -1,0 +1,26 @@
+schema|onu.core|1.0
+error|export_failure
+error|flush_failure
+error|other
+event|onu.log.suppression_summary|1002|Suppressed events summary
+field|event:onu.log.suppression_summary|count|Counter|False||0|1000000|||{item}||
+field|event:onu.log.suppression_summary|reason|FiniteString|False|64||||||export_failure,flush_failure,key_capacity,other,rate_limit|other
+event|onu.operation.completed|1000|Operation completed
+event|onu.operation.failed|1001|Operation failed
+operation|onu.lifecycle.flush
+field|operation:onu.lifecycle.flush|signal|FiniteString|True|64||||||log,metric,other,trace|other
+operation|onu.pipeline.export
+field|operation:onu.pipeline.export|count|Counter|False||0|1000000|||{item}||
+field|operation:onu.pipeline.export|signal|FiniteString|True|64||||||log,metric,other,trace|other
+outcome|authorization_denied
+outcome|caller_cancelled
+outcome|deadline_exceeded
+outcome|dependency_error
+outcome|host_stopped
+outcome|internal_error
+outcome|other
+outcome|success
+outcome|validation_error
+reason|key_capacity
+reason|other
+reason|rate_limit

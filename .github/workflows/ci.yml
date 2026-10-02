@@ -1,0 +1,100 @@
+name: OnuObservability CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  DOTNET_NOLOGO: true
+
+jobs:
+  verify:
+    name: Verify (${{ matrix.os }}, .NET 10)
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - name: Locked restore
+        run: dotnet restore OnuObservability.sln --locked-mode
+      - name: Release build
+        run: dotnet build OnuObservability.sln -c Release --no-restore
+      - name: Tests
+        run: dotnet test OnuObservability.sln -c Release --no-build --logger "trx;LogFileName=onu-${{ runner.os }}-net10.trx"
+      - name: Formatting
+        run: dotnet format OnuObservability.sln --verify-no-changes --no-restore
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: test-results-${{ runner.os }}-net10
+          path: '**/TestResults/*.trx'
+          if-no-files-found: warn
+
+  exact-packages:
+    name: Exact packages and live Collector (Ubuntu)
+    runs-on: ubuntu-latest
+    env:
+      PACKAGE_VERSION: 0.1.0-ci.${{ github.run_number }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - name: Restore and build once
+        run: |
+          dotnet restore OnuObservability.sln --locked-mode
+          dotnet build OnuObservability.sln -c Release --no-restore -p:PackageVersion=${{ env.PACKAGE_VERSION }}
+      - name: Pack immutable CI prerelease artifacts
+        shell: pwsh
+        run: ./eng/Pack-Local.ps1 -PackageVersion "${{ env.PACKAGE_VERSION }}" -NoBuild
+      - name: Exact-package consumer tests
+        shell: pwsh
+        run: ./eng/Test-LocalPackages.ps1 -PackageVersion "${{ env.PACKAGE_VERSION }}"
+      - name: Package policy and seeded negative gates
+        shell: pwsh
+        run: ./eng/Test-PackageArtifacts.ps1 -PackageVersion "${{ env.PACKAGE_VERSION }}"
+      - name: Dependency vulnerability audit
+        run: dotnet list OnuObservability.sln package --vulnerable --include-transitive
+      - name: Supply-chain evidence
+        shell: pwsh
+        run: ./eng/New-SupplyChainEvidence.ps1 -PackageVersion "${{ env.PACKAGE_VERSION }}"
+      - name: Performance budgets
+        run: dotnet run --project benchmarks/OnuObservability.Benchmarks -c Release --no-build -- --output artifacts/benchmarks/ci.json
+      - name: Validate Collector profiles
+        shell: bash
+        env:
+          OTEL_BACKEND_ENDPOINT: https://collector.example
+          OTEL_BACKEND_AUTHORIZATION: Bearer-validation-placeholder
+          OTEL_TEST_BACKEND_ENDPOINT: http://host.docker.internal:18080
+        run: |
+          image='otel/opentelemetry-collector-contrib:0.161.0@sha256:fd328de2552466ad78385e1b1289c3f2402b1c45f265b252aab1955b42845ac1'
+          for config in collector.local.yaml collector.production.yaml collector.persistent.yaml collector.failure-test.yaml; do
+            docker run --rm \
+              -e OTEL_BACKEND_ENDPOINT -e OTEL_BACKEND_AUTHORIZATION -e OTEL_TEST_BACKEND_ENDPOINT \
+              -v "$PWD/observability/$config:/etc/otelcol-contrib/config.yaml:ro" \
+              "$image" validate --config=/etc/otelcol-contrib/config.yaml
+          done
+      - name: Live exact-package adapter capture
+        shell: pwsh
+        run: ./eng/Test-WebLiveCollector.ps1
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: exact-packages-and-live-capture
+          path: |
+            artifacts/packages/
+            artifacts/consumer-locks/
+            artifacts/live-collector/
+            artifacts/supply-chain/
+            artifacts/benchmarks/
+          if-no-files-found: error

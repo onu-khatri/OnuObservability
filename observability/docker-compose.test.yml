@@ -1,0 +1,8 @@
+services:
+  collector:
+    command:
+      - --config=/etc/otelcol-contrib/config.yaml
+      - --config=/etc/otelcol-contrib/test-capture.yaml
+    volumes:
+      - { type: bind, source: ./collector.test-capture.yaml, target: /etc/otelcol-contrib/test-capture.yaml, read_only: true }
+      - { type: bind, source: "${OTEL_TEST_CAPTURE_PATH:?Set OTEL_TEST_CAPTURE_PATH to an approved temporary directory}", target: /var/lib/otelcol-test }

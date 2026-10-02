@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup Condition="'$(UseLocalPackages)' != 'true'">
+    <ProjectReference Include="..\..\src\OnuObservability.Mcp\OnuObservability.Mcp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(UseLocalPackages)' == 'true'">
+    <PackageReference Include="OnuObservability.Mcp" VersionOverride="[$(OnuObservabilityPackageVersion)]" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsSampleProject>true</IsSampleProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" VersionOverride="10.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

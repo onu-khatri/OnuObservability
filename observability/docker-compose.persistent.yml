@@ -1,0 +1,20 @@
+services:
+  queue-init:
+    image: busybox:1.37.0@sha256:bdf57e528e45e4433820e045b29b4597825a1c9e38353532d90a01445013f82e
+    command: ["sh", "-c", "chown -R 10001:10001 /storage && chmod 0700 /storage"]
+    user: "0:0"
+    read_only: true
+    restart: "no"
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    cap_add: [CHOWN, FOWNER, DAC_OVERRIDE]
+    volumes:
+      - { type: volume, source: collector-queue, target: /storage }
+  collector:
+    depends_on:
+      queue-init: { condition: service_completed_successfully }
+    volumes:
+      - { type: volume, source: collector-queue, target: /var/lib/otelcol/storage }
+volumes:
+  collector-queue:
+    name: onu-observability-collector-queue

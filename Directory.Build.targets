@@ -1,0 +1,32 @@
+<Project>
+  <PropertyGroup Condition="'$(IsTestProject)' == 'true' or '$(IsSampleProject)' == 'true'">
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(IsPackable)' == 'true'">
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Authors>onu-khatri</Authors>
+    <Owners>onu-khatri</Owners>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageProjectUrl>https://github.com/onu-khatri/OnuObservability</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/onu-khatri/OnuObservability.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <OnuEnableSourceLink Condition="'$(OnuEnableSourceLink)' == '' and '$(GITHUB_REPOSITORY)' == 'onu-khatri/OnuObservability'">true</OnuEnableSourceLink>
+    <OnuEnableSourceLink Condition="'$(OnuEnableSourceLink)' == ''">false</OnuEnableSourceLink>
+    <EnableSourceLink>$(OnuEnableSourceLink)</EnableSourceLink>
+    <EnableSourceControlManagerQueries>$(OnuEnableSourceLink)</EnableSourceControlManagerQueries>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(IsPackable)' == 'true'">
+    <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="/" />
+    <None Include="$(MSBuildThisFileDirectory)LICENSE" Pack="true" PackagePath="/" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+  </ItemGroup>
+</Project>

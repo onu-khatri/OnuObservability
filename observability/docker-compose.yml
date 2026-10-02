@@ -1,0 +1,23 @@
+name: onu-observability
+services:
+  collector:
+    image: otel/opentelemetry-collector-contrib:0.161.0@sha256:fd328de2552466ad78385e1b1289c3f2402b1c45f265b252aab1955b42845ac1
+    command: ["--config=/etc/otelcol-contrib/config.yaml"]
+    environment:
+      OTEL_BACKEND_ENDPOINT: "${OTEL_BACKEND_ENDPOINT:-}"
+      OTEL_BACKEND_AUTHORIZATION: "${OTEL_BACKEND_AUTHORIZATION:-}"
+      OTEL_TEST_BACKEND_ENDPOINT: "${OTEL_TEST_BACKEND_ENDPOINT:-}"
+    restart: unless-stopped
+    read_only: true
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 256m
+    volumes:
+      - { type: bind, source: "./${OTEL_COLLECTOR_CONFIG:-collector.local.yaml}", target: /etc/otelcol-contrib/config.yaml, read_only: true }
+    tmpfs:
+      - /tmp:size=16m,mode=1770,uid=10001,gid=10001
+      - /var/lib/otelcol-local:size=64m,mode=0770,uid=10001,gid=10001
+    ports:
+      - { target: 4317, published: "${OTEL_GRPC_PORT:-4317}", host_ip: 127.0.0.1, protocol: tcp }
+      - { target: 4318, published: "${OTEL_HTTP_PORT:-4318}", host_ip: 127.0.0.1, protocol: tcp }
+      - { target: 13133, published: "${OTEL_HEALTH_PORT:-13133}", host_ip: 127.0.0.1, protocol: tcp }
+      - { target: 8888, published: "${OTEL_METRICS_PORT:-8888}", host_ip: 127.0.0.1, protocol: tcp }

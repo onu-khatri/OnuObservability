@@ -1,0 +1,9 @@
+.packages/
+artifacts/
+bin/
+obj/
+TestResults/
+*.user
+*.suo
+.vs/
+.idea/

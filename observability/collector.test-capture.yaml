@@ -1,0 +1,4 @@
+exporters:
+  file/local:
+    path: /var/lib/otelcol-test/telemetry.jsonl
+    flush_interval: 0s

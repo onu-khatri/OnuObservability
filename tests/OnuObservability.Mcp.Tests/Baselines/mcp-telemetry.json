@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "telemetrySchemaVersion": "1.0.0",
+  "applicationSchemaVersion": "1",
+  "semanticConventionPolicyVersion": "otel-stable-1",
+  "activitySource": "AgentSession.MCP",
+  "meter": "AgentSession.MCP",
+  "logCategories": [
+    "AgentSession.MCP.Observability.Events",
+    "AgentSession.MCP.Observability.SelfDiagnostics"
+  ],
+  "activities": [
+    { "name": "mcp request", "kind": "server", "attributes": ["mcp.method.name", "mcp.protocol.version", "mcp.transport", "mcp.status", "error.type"] },
+    { "namePattern": "mcp tool {registered-tool-or-unknown}", "kind": "internal", "attributes": ["mcp.tool.name", "mcp.transport", "mcp.status", "error.type"] },
+    { "namePattern": "mcp dependency {dependency.type} {dependency.operation}", "kind": "client", "attributes": ["dependency.type", "dependency.operation", "mcp.batch.items", "mcp.status", "error.type"] },
+    { "namePattern": "mcp operation {dependency.type} {dependency.operation}", "kind": "internal", "attributes": ["dependency.type", "dependency.operation", "mcp.batch.items", "mcp.status", "error.type", "mcp.work.deleted", "mcp.work.archived", "mcp.work.processed", "mcp.work.indexed", "mcp.work.deferred", "mcp.work.queued", "mcp.work.orphans", "mcp.work.errors", "mcp.recovery.performed"] }
+  ],
+  "metrics": [
+    { "name": "mcp.server.requests", "type": "counter<long>", "unit": "{request}", "dimensions": ["mcp.method.name", "mcp.status", "mcp.protocol.version", "mcp.transport"] },
+    { "name": "mcp.server.request.duration", "type": "histogram<double>", "unit": "s", "dimensions": ["mcp.method.name", "mcp.status"], "histogram": "latencySeconds" },
+    { "name": "mcp.server.inflight", "type": "updowncounter<long>", "unit": "{request}", "dimensions": ["mcp.method.name"] },
+    { "name": "mcp.tool.invocations", "type": "counter<long>", "unit": "{invocation}", "dimensions": ["mcp.tool.name", "mcp.status"] },
+    { "name": "mcp.tool.duration", "type": "histogram<double>", "unit": "s", "dimensions": ["mcp.tool.name", "mcp.status"], "histogram": "latencySeconds" },
+    { "name": "mcp.tool.input.items", "type": "histogram<long>", "unit": "{item}", "dimensions": ["mcp.tool.name"], "histogram": "itemCount" },
+    { "name": "mcp.tool.output.items", "type": "histogram<long>", "unit": "{item}", "dimensions": ["mcp.tool.name"], "histogram": "itemCount" },
+    { "name": "mcp.tool.input.size", "type": "histogram<long>", "unit": "By", "dimensions": ["mcp.tool.name"], "histogram": "byteSize", "emission": "only-when-original-transport-size-is-available" },
+    { "name": "mcp.tool.output.size", "type": "histogram<long>", "unit": "By", "dimensions": ["mcp.tool.name"], "histogram": "byteSize", "emission": "only-when-original-transport-size-is-available" },
+    { "name": "mcp.validation.failures", "type": "counter<long>", "unit": "{failure}", "dimensions": ["mcp.tool.name", "reason"] },
+    { "name": "mcp.authorization.denials", "type": "counter<long>", "unit": "{denial}", "dimensions": ["mcp.tool.name", "reason"] },
+    { "name": "mcp.protocol.errors", "type": "counter<long>", "unit": "{error}", "dimensions": ["mcp.method.name", "reason"] },
+    { "name": "mcp.server.timeouts", "type": "counter<long>", "unit": "{timeout}", "dimensions": ["mcp.method.name", "mcp.tool.name"] },
+    { "name": "mcp.server.cancelled", "type": "counter<long>", "unit": "{cancellation}", "dimensions": ["mcp.method.name"] },
+    { "name": "mcp.dependency.errors", "type": "counter<long>", "unit": "{error}", "dimensions": ["dependency.type", "dependency.operation"] },
+    { "name": "mcp.logs.suppressed", "type": "counter<long>", "unit": "{log}", "dimensions": ["event.name", "mcp.tool.name", "mcp.status", "reason"] },
+    { "name": "mcp.telemetry.dropped", "type": "counter<long>", "unit": "{item}", "dimensions": ["signal", "reason"] }
+  ],
+  "events": [
+    { "id": 1001, "name": "mcp.tool.completed", "level": "Information", "fields": ["ToolName", "Outcome", "DurationSeconds", "InputItems", "OutputItems", "TraceId", "SpanId", "TraceFlags"] },
+    { "id": 1002, "name": "mcp.tool.failed", "level": "Warning", "fields": ["ToolName", "Outcome", "ErrorType", "DurationSeconds", "InputItems", "OutputItems", "TraceId", "SpanId", "TraceFlags"] },
+    { "id": 1003, "name": "mcp.logs.suppressed", "level": "Warning", "fields": ["SuppressedEventName", "ToolName", "Outcome", "Count"] },
+    { "id": 1090, "name": "mcp.telemetry.dropped", "level": "Warning", "delivery": "bounded-direct-stderr-non-recursive", "fields": ["Timestamp", "Signal", "Reason", "Count"] },
+    { "id": 1101, "name": "mcp.security.destructive_tool_attempt", "level": "Warning", "fields": ["ToolName", "PolicyClass", "Outcome", "TraceId"] }
+  ],
+  "resources": {
+    "allSignals": [
+      "service.name",
+      "service.namespace",
+      "service.version",
+      "deployment.environment.name",
+      "process.runtime.name",
+      "process.runtime.version",
+      "mcp.transport",
+      "telemetry.schema.version",
+      "telemetry.policy.version",
+      "application.schema.version",
+      "mcp.toolset.version"
+    ],
+    "tracesAndLogsOnly": ["service.instance.id"],
+    "metricsExcluded": ["service.instance.id"]
+  },
+  "histograms": {
+    "latencySeconds": [0.0005, 0.001, 0.0025, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10, 30, 60],
+    "itemCount": [0, 1, 2, 4, 8, 16, 32, 64, 128, 256],
+    "byteSize": [64, 256, 1024, 4096, 16384, 65536, 262144, 1048576]
+  },
+  "privacyExclusions": [
+    "prompts",
+    "hidden-reasoning",
+    "tool-arguments",
+    "tool-results",
+    "memory-or-session-content",
+    "credentials-or-tokens",
+    "cookies",
+    "connection-strings",
+    "authorization-data",
+    "headers",
+    "query-strings",
+    "raw-urls",
+    "managed-paths",
+    "exception-messages",
+    "stack-traces",
+    "raw-user-actor-session-operation-object-identifiers"
+  ]
+}
