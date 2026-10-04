@@ -1,11 +1,14 @@
 using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 using OnuObservability.Hosting.Background;
 using OnuObservability.Operations;
 
 namespace OnuObservability.Sample.Worker;
 
-public sealed class Worker(SampleWorkload workload) : BackgroundService
+public sealed class Worker(SampleWorkload workload, ILoggerFactory loggerFactory) : BackgroundService
 {
+    private readonly ILogger _events = loggerFactory.CreateLogger(WorkerTelemetry.SafeLogCategory);
+
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var scenarios = new[]
@@ -17,6 +20,7 @@ public sealed class Worker(SampleWorkload workload) : BackgroundService
         };
 
         var index = 0;
+        var reconciledBatches = 0;
         while (!stoppingToken.IsCancellationRequested)
         {
             try
@@ -35,6 +39,13 @@ public sealed class Worker(SampleWorkload workload) : BackgroundService
             {
                 // The deadline path is already classified and recorded by the runner.
             }
+
+            // Application-owned safe-log event: only AccountCount/Currency are approved
+            // for serialization by the registered SafeLogPolicy.
+            WorkerEvents.AccountReconciled(
+                _events,
+                accountCount: ++reconciledBatches * 12,
+                currency: "USD");
 
             await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
         }

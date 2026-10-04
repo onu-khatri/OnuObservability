@@ -3,7 +3,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ModelContextProtocol.Server;
-using OnuObservability.Hosting;
+using OnuObservability.Hosting.Composition;
+using OnuObservability.Mcp.Configuration;
+using OnuObservability.Mcp.Filters;
+using OnuObservability.Mcp.Health;
+using OnuObservability.Mcp.Registry;
+using OnuObservability.Mcp.Schema;
 
 namespace OnuObservability.Mcp.Tests;
 

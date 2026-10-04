@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OnuObservability.Hosting.Composition;
 using OnuObservability.Hosting.Telemetry;
 using OnuObservability.Model;
 using OnuObservability.Operations;

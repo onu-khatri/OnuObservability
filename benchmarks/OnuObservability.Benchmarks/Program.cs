@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using OnuObservability.Hosting;
+using OnuObservability.Hosting.Composition;
 using OnuObservability.Operations;
 using OnuObservability.Schema;
 

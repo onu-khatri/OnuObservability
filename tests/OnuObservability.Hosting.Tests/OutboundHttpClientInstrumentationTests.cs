@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OnuObservability.Hosting.Composition;
 using OpenTelemetry.Trace;
 
 namespace OnuObservability.Hosting.Tests;

@@ -1,3 +1,5 @@
+using OnuObservability.Mcp.Schema;
+
 namespace OnuObservability.Mcp.Tests;
 
 public sealed class McpTelemetrySchemaTests

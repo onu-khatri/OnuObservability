@@ -2,7 +2,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using OnuObservability.Hosting;
+using OnuObservability.AspNetCore.Configuration;
+using OnuObservability.AspNetCore.Middleware;
+using OnuObservability.AspNetCore.Schema;
+using OnuObservability.AspNetCore.Telemetry;
+using OnuObservability.Hosting.Composition;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 

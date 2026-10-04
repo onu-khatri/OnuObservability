@@ -4,6 +4,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Patterns;
 using Microsoft.Extensions.Logging.Abstractions;
+using OnuObservability.AspNetCore.Configuration;
+using OnuObservability.AspNetCore.Middleware;
+using OnuObservability.AspNetCore.Schema;
+using OnuObservability.AspNetCore.Telemetry;
 
 namespace OnuObservability.AspNetCore.Tests;
 

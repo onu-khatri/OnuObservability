@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using OnuObservability.Hosting.Composition;
 using OnuObservability.Operations;
 using OnuObservability.Schema;
 using OpenTelemetry.Logs;

@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Text.Json;
+using OnuObservability.Hosting.Composition;
 using OnuObservability.Operations;
 
 namespace OnuObservability.Hosting.Telemetry;

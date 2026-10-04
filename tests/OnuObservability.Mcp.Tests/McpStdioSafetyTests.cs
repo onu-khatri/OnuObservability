@@ -4,7 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
-using OnuObservability.Hosting;
+using OnuObservability.Hosting.Composition;
+using OnuObservability.Mcp.Filters;
 using OnuObservability.Operations;
 
 namespace OnuObservability.Mcp.Tests;

@@ -1,9 +1,11 @@
 using System.Reflection;
 using System.Text.RegularExpressions;
 using OnuObservability.AspNetCore;
+using OnuObservability.AspNetCore.Configuration;
 using OnuObservability.Hosting.Background;
 using OnuObservability.Hosting.Configuration;
 using OnuObservability.Mcp;
+using OnuObservability.Mcp.Configuration;
 
 namespace OnuObservability.Contract.Tests;
 

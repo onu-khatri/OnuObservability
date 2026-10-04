@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
+using OnuObservability.Hosting.Composition;
 
 namespace OnuObservability.Hosting.Telemetry;
 

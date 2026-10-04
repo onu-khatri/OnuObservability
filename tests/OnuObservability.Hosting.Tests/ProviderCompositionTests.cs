@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OnuObservability.Hosting.Composition;
 using OnuObservability.Model;
 using OnuObservability.Operations;
 using OnuObservability.Schema;

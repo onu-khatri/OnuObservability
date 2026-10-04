@@ -1,13 +1,18 @@
-// See https://aka.ms/new-console-template for more information
-using System.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ModelContextProtocol.Server;
-using OnuObservability.Hosting;
+using OnuObservability.Hosting.Composition;
 using OnuObservability.Mcp;
+using OnuObservability.Mcp.Classification;
+using OnuObservability.Sample.Mcp;
 
 var builder = Host.CreateApplicationBuilder(args);
 var observability = builder.Services.AddOnuObservability(builder.Configuration);
+
+// Register the domain-aware outcome classifier before WithOnuObservability so the
+// adapter's TryAddSingleton keeps this implementation.
+builder.Services.AddSingleton<IMcpTelemetryOutcomeClassifier, SampleOutcomeClassifier>();
+
 builder.Services
     .AddMcpServer()
     .WithStdioServerTransport()
@@ -15,15 +20,3 @@ builder.Services
     .WithOnuObservability(observability);
 
 await builder.Build().RunAsync();
-
-[McpServerToolType]
-internal sealed class SampleTools
-{
-    [McpServerTool(Name = "echo")]
-    [Description("Returns the supplied text. Telemetry records counts only, never this value.")]
-    public static string Echo(string value) => value;
-
-    [McpServerTool(Name = "fail")]
-    [Description("Returns a deterministic sample failure.")]
-    public static void Fail() => throw new InvalidOperationException("sample failure");
-}

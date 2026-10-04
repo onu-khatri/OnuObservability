@@ -4,6 +4,13 @@ using System.Diagnostics.Metrics;
 using Microsoft.Extensions.Logging;
 using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
+using OnuObservability.Mcp.Classification;
+using OnuObservability.Mcp.Configuration;
+using OnuObservability.Mcp.Filters;
+using OnuObservability.Mcp.Logging;
+using OnuObservability.Mcp.Registry;
+using OnuObservability.Mcp.Schema;
+using OnuObservability.Mcp.Telemetry;
 using OnuObservability.Model;
 
 namespace OnuObservability.Mcp.Tests;

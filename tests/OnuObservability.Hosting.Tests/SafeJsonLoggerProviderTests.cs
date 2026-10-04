@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using OnuObservability.Hosting.Composition;
 using OnuObservability.Hosting.Logging;
 using OnuObservability.Logging;
 

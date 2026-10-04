@@ -1,8 +1,8 @@
 using System.Collections.Concurrent;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using OnuObservability.Hosting;
 using OnuObservability.Hosting.Background;
+using OnuObservability.Hosting.Composition;
 using OnuObservability.Operations;
 using OnuObservability.Sample.Worker;
 

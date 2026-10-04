@@ -1,3 +1,4 @@
+using OnuObservability.Mcp.Classification;
 using OnuObservability.Model;
 
 namespace OnuObservability.Mcp.Tests;

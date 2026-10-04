@@ -1,4 +1,6 @@
 using ModelContextProtocol.Server;
+using OnuObservability.Mcp.Registry;
+using OnuObservability.Mcp.Schema;
 
 namespace OnuObservability.Mcp.Tests;
 

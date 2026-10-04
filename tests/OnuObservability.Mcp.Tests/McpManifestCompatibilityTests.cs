@@ -1,4 +1,5 @@
 using System.Text.Json;
+using OnuObservability.Mcp.Schema;
 
 namespace OnuObservability.Mcp.Tests;
 

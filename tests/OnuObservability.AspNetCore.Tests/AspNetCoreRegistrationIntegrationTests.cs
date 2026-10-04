@@ -7,7 +7,8 @@ using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using OnuObservability.Hosting;
+using OnuObservability.AspNetCore.Configuration;
+using OnuObservability.Hosting.Composition;
 using OpenTelemetry.Trace;
 
 namespace OnuObservability.AspNetCore.Tests;
